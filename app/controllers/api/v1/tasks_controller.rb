@@ -1,4 +1,4 @@
-class TasksController < ApplicationController
+class Api::V1::TasksController < ApplicationController
   before_action :set_task, only: %i[show update destroy]
 
   # GET /tasks
@@ -18,7 +18,7 @@ class TasksController < ApplicationController
     @task = Task.new(task_params)
 
     if @task.save
-      render json: @task, status: :created, location: @task
+      render json: @task, status: :created, location: api_v1_task_path(@task)
     else
       render json: @task.errors, status: :unprocessable_entity
     end

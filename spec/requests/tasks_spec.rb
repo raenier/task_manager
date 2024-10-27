@@ -35,7 +35,7 @@ RSpec.describe '/tasks', type: :request do
   describe 'GET /index' do
     it 'renders a successful response' do
       Task.create! valid_attributes
-      get tasks_url, headers: valid_headers, as: :json
+      get api_v1_tasks_url, headers: valid_headers, as: :json
       expect(response).to be_successful
     end
   end
@@ -43,7 +43,7 @@ RSpec.describe '/tasks', type: :request do
   describe 'GET /show' do
     it 'renders a successful response' do
       task = Task.create! valid_attributes
-      get task_url(task), as: :json
+      get api_v1_task_url(task), as: :json
       expect(response).to be_successful
     end
   end
@@ -52,13 +52,13 @@ RSpec.describe '/tasks', type: :request do
     context 'with valid parameters' do
       it 'creates a new Task' do
         expect do
-          post tasks_url,
+          post api_v1_tasks_url,
                params: { task: valid_attributes }, headers: valid_headers, as: :json
         end.to change(Task, :count).by(1)
       end
 
       it 'renders a JSON response with the new task' do
-        post tasks_url,
+        post api_v1_tasks_url,
              params: { task: valid_attributes }, headers: valid_headers, as: :json
         expect(response).to have_http_status(:created)
         expect(response.content_type).to match(a_string_including('application/json'))
@@ -68,13 +68,13 @@ RSpec.describe '/tasks', type: :request do
     context 'with invalid parameters' do
       it 'does not create a new Task' do
         expect do
-          post tasks_url,
+          post api_v1_tasks_url,
                params: { task: invalid_attributes }, as: :json
         end.to change(Task, :count).by(0)
       end
 
       it 'renders a JSON response with errors for the new task' do
-        post tasks_url,
+        post api_v1_tasks_url,
              params: { task: invalid_attributes }, headers: valid_headers, as: :json
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.content_type).to match(a_string_including('application/json'))
@@ -90,7 +90,7 @@ RSpec.describe '/tasks', type: :request do
 
       it 'updates the requested task' do
         task = Task.create! valid_attributes
-        patch task_url(task),
+        patch api_v1_task_url(task),
               params: { task: new_attributes }, headers: valid_headers, as: :json
         task.reload
         expect(task.title).to eq('updated')
@@ -98,7 +98,7 @@ RSpec.describe '/tasks', type: :request do
 
       it 'renders a JSON response with the task' do
         task = Task.create! valid_attributes
-        patch task_url(task),
+        patch api_v1_task_url(task),
               params: { task: new_attributes }, headers: valid_headers, as: :json
         expect(response).to have_http_status(:ok)
         expect(response.content_type).to match(a_string_including('application/json'))
@@ -108,7 +108,7 @@ RSpec.describe '/tasks', type: :request do
     context 'with invalid parameters' do
       it 'renders a JSON response with errors for the task' do
         task = Task.create! valid_attributes
-        patch task_url(task),
+        patch api_v1_task_url(task),
               params: { task: invalid_attributes }, headers: valid_headers, as: :json
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.content_type).to match(a_string_including('application/json'))
@@ -120,7 +120,7 @@ RSpec.describe '/tasks', type: :request do
     it 'destroys the requested task' do
       task = Task.create! valid_attributes
       expect do
-        delete task_url(task), headers: valid_headers, as: :json
+        delete api_v1_task_url(task), headers: valid_headers, as: :json
       end.to change(Task, :count).by(-1)
     end
   end
