@@ -49,6 +49,16 @@ RSpec.describe '/tasks', type: :request do
       expect(JSON.parse(response.body).first['title']).to eq(task1.title)
       expect(JSON.parse(response.body).last['title']).to eq(task2.title)
     end
+
+    it 'returns paginated tasks' do
+      4.times do
+        Task.create! valid_attributes
+      end
+
+      get api_v1_tasks_url, params: { page: 1, per_page: 2 }, headers: valid_headers
+
+      expect(JSON.parse(response.body).length).to eq(2)
+    end
   end
 
   describe 'GET /show' do

@@ -3,7 +3,7 @@ class Api::V1::TasksController < ApplicationController
 
   # GET /tasks
   def index
-    @tasks = Task.rank(:row_order).all
+    @tasks = Task.rank(:row_order).all.page(params[:page]).per(params[:per_page])
 
     render json: @tasks
   end
