@@ -2,16 +2,25 @@
 
 ## Running the API
 
-1. Clone the repository
+1. Clone this repository and cd to app directory
+```
+$ git clone git@github.com:raenier/task_manager.git
+$ cd task_manager
+```
 
 2. Install dependencies
 ```
 $ bundle install
 ```
 
-3. Run the API
+3. Prepare the database
 ```
-$ rails s
+$ bundle exec rails db:prepare
+```
+
+4. Run the API
+```
+$ bundle exec rails s
 ```
 
 ----
@@ -19,7 +28,7 @@ $ rails s
 ## Documentation
 ### Base URL
 ```
-http://localhost/api/v1/tasks
+http://localhost:3000/api/v1
 ```
 
 ### Endpoints
