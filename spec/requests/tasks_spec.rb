@@ -124,4 +124,30 @@ RSpec.describe '/tasks', type: :request do
       end.to change(Task, :count).by(-1)
     end
   end
+
+  describe 'PATCH /move' do
+    it 'moves the task' do
+      task_one = Task.create! valid_attributes
+      task_two = Task.create! valid_attributes
+      task_three = Task.create! valid_attributes
+
+      patch move_api_v1_task_url(task_three), params: { position: 1 }, headers: valid_headers, as: :json
+      expect(response).to have_http_status(:ok)
+      expect(task_three.reload.row_order).to be > (task_one.reload.row_order)
+      expect(task_three.reload.row_order).to be < (task_two.reload.row_order)
+    end
+
+    it 'renders a JSON response with the task' do
+      task = Task.create! valid_attributes
+      patch move_api_v1_task_url(task), params: { position: 1 }, headers: valid_headers, as: :json
+      expect(response).to have_http_status(:ok)
+      expect(response.content_type).to match(a_string_including('application/json'))
+    end
+
+    it 'requires a position params' do
+      task = Task.create! valid_attributes
+      patch move_api_v1_task_url(task), headers: valid_headers, as: :json
+      expect(response).to have_http_status(:bad_request)
+    end
+  end
 end

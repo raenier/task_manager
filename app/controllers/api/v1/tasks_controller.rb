@@ -1,5 +1,5 @@
 class Api::V1::TasksController < ApplicationController
-  before_action :set_task, only: %i[show update destroy]
+  before_action :set_task, only: %i[show update destroy move]
 
   # GET /tasks
   def index
@@ -38,6 +38,13 @@ class Api::V1::TasksController < ApplicationController
     @task.destroy!
   end
 
+  # PATCH/PUT /tasks/1/move
+  def move
+    @task.update(row_order_position: position_params)
+
+    render json: @task
+  end
+
   private
 
   # Use callbacks to share common setup or constraints between actions.
@@ -48,5 +55,9 @@ class Api::V1::TasksController < ApplicationController
   # Only allow a list of trusted parameters through.
   def task_params
     params.require(:task).permit(:title)
+  end
+
+  def position_params
+    params.require(:position)
   end
 end
