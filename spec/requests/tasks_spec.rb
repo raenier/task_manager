@@ -38,6 +38,17 @@ RSpec.describe '/tasks', type: :request do
       get api_v1_tasks_url, headers: valid_headers, as: :json
       expect(response).to be_successful
     end
+
+    it 'returns an ordered list of tasks based on row_order' do
+      task1 = Task.create! title: 'Task 1', row_order: 1
+      task2 = Task.create! title: 'Task 2', row_order: 3
+      task3 = Task.create! title: 'Task 3', row_order: 2
+
+      get api_v1_tasks_url, headers: valid_headers, as: :json
+
+      expect(JSON.parse(response.body).first['title']).to eq(task1.title)
+      expect(JSON.parse(response.body).last['title']).to eq(task2.title)
+    end
   end
 
   describe 'GET /show' do
